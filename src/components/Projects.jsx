@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const projects = [
   {
     title: "Student Portfolio",
@@ -22,13 +24,22 @@ const projects = [
   },
 ];
 
+const filters = ["All", "Web Development", "Productivity App", "IT / Networking"];
+
 function Projects() {
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const filteredProjects =
+    activeFilter === "All"
+      ? projects
+      : projects.filter((project) => project.type === activeFilter);
+
   return (
     <section
       id="projects"
       className="mx-auto max-w-6xl border-t border-white/10 px-6 py-24"
     >
-      <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-gray-400">
             03 — PROJECTS
@@ -44,8 +55,26 @@ function Projects() {
         </p>
       </div>
 
+      {/* Project Filters */}
+      <div className="mb-10 flex flex-wrap gap-3">
+        {filters.map((filter) => (
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={`rounded-full border px-4 py-2 text-sm font-medium transition-all ${
+              activeFilter === filter
+                ? "border-emerald-300 bg-emerald-300 text-black"
+                : "border-white/10 text-gray-400 hover:border-white/30 hover:text-white"
+            }`}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      {/* Projects */}
       <div className="grid gap-6 md:grid-cols-3">
-        {projects.map((project, i) => (
+        {filteredProjects.map((project, i) => (
           <article
             className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-2 hover:border-white/20 hover:bg-white/[0.06]"
             key={project.title}
