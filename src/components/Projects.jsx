@@ -28,6 +28,7 @@ const filters = ["All", "Web Development", "Productivity App", "IT / Networking"
 
 function Projects() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const filteredProjects =
     activeFilter === "All"
@@ -76,8 +77,9 @@ function Projects() {
       <div className="grid gap-6 md:grid-cols-3">
         {filteredProjects.map((project, i) => (
           <article
-            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-2 hover:border-white/20 hover:bg-white/[0.06]"
             key={project.title}
+            onClick={() => setSelectedProject(project)}
+            className="group cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-2 hover:border-white/20 hover:bg-white/[0.06]"
           >
             <div className="mb-8 flex items-center justify-between">
               <span className="text-sm font-semibold text-gray-500">
@@ -107,9 +109,74 @@ function Projects() {
                 </span>
               ))}
             </div>
+
+            <p className="mt-6 text-sm font-medium text-emerald-300">
+              Click to view details →
+            </p>
           </article>
         ))}
       </div>
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-6 backdrop-blur-sm"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#111] p-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div>
+                <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  {selectedProject.type}
+                </p>
+
+                <h3 className="text-2xl font-bold text-white">
+                  {selectedProject.title}
+                </h3>
+              </div>
+
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="rounded-full border border-white/10 px-3 py-1 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+                aria-label="Close project details"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="mb-6 leading-7 text-gray-400">
+              {selectedProject.description}
+            </p>
+
+            <div>
+              <p className="mb-3 text-sm font-semibold text-white">
+                Technologies
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {selectedProject.tech.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-full border border-white/10 px-3 py-1 text-sm text-gray-400"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => setSelectedProject(null)}
+              className="mt-8 w-full rounded-lg bg-emerald-300 px-5 py-3 font-semibold text-black transition-transform hover:-translate-y-0.5"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
