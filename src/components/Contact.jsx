@@ -1,4 +1,48 @@
+
+import { useState } from "react";
+import { ContactMessage } from "../models/ContactMessage.js";
+
 function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [feedback, setFeedback] = useState("");
+  const [isError, setIsError] = useState(false);
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+
+    setFeedback("");
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const contactMessage = new ContactMessage(formData);
+
+    if (!contactMessage.isValid()) {
+      setIsError(true);
+      setFeedback("Please enter a valid name, email, and message.");
+      return;
+    }
+
+    setIsError(false);
+    setFeedback("Form validated successfully! No message was sent or stored.");
+    setFormData({
+      name: "",
+      email: "",
+      message: "",
+    });
+  }
+
   return (
     <section
       id="contact"
@@ -15,21 +59,21 @@ function Contact() {
 
         <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
           Use the form below to start a conversation. For this academic
-          project, submission simply demonstrates the interface and form
-          structure.
+          project, submission demonstrates the interface and form validation.
         </p>
       </div>
 
-      <form
-        className="space-y-6"
-        onSubmit={(e) => e.preventDefault()}
-      >
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <label className="block text-sm font-medium text-gray-300">
           Name
           <input
             className="mt-2 w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.05]"
             type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             placeholder="Your name"
+            required
           />
         </label>
 
@@ -38,7 +82,11 @@ function Contact() {
           <input
             className="mt-2 w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.05]"
             type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="you@example.com"
+            required
           />
         </label>
 
@@ -46,10 +94,24 @@ function Contact() {
           Message
           <textarea
             className="mt-2 w-full resize-y rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.05]"
-            rows="5"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows={5}
             placeholder="Tell me about your idea..."
+            required
           />
         </label>
+
+        {feedback && (
+          <p
+            role="status"
+            aria-live="polite"
+            className={`text-sm ${isError ? "text-red-400" : "text-emerald-300"}`}
+          >
+            {feedback}
+          </p>
+        )}
 
         <button
           className="rounded-lg bg-emerald-300 px-6 py-3 font-semibold text-black transition-transform hover:-translate-y-0.5"
