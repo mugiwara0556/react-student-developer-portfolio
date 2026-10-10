@@ -1,30 +1,40 @@
+
 import { useState } from "react";
+import { Project } from "../models/Project.js";
 
 const projects = [
-  {
+  new Project({
+    id: "project-1",
     title: "Student Portfolio",
-    type: "Web Development",
+    category: "Web Development",
     description:
       "A responsive portfolio interface built with reusable React components and Tailwind CSS.",
-    tech: ["React", "Tailwind CSS", "Vite"],
-  },
-  {
+    technologies: ["React", "Tailwind CSS", "Vite"],
+  }),
+  new Project({
+    id: "project-2",
     title: "Task Tracker",
-    type: "Productivity App",
+    category: "Productivity App",
     description:
       "A simple task management concept focused on clear interactions and organized state.",
-    tech: ["JavaScript", "HTML", "Tailwind CSS"],
-  },
-  {
+    technologies: ["JavaScript", "HTML", "Tailwind CSS"],
+  }),
+  new Project({
+    id: "project-3",
     title: "Network Lab",
-    type: "IT / Networking",
+    category: "IT / Networking",
     description:
       "A learning project documenting network configuration, connectivity testing, and technical notes.",
-    tech: ["Cisco", "Networking", "Documentation"],
-  },
+    technologies: ["Cisco", "Networking", "Documentation"],
+  }),
 ];
 
-const filters = ["All", "Web Development", "Productivity App", "IT / Networking"];
+const filters = [
+  "All",
+  "Web Development",
+  "Productivity App",
+  "IT / Networking",
+];
 
 function Projects() {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -33,7 +43,7 @@ function Projects() {
   const filteredProjects =
     activeFilter === "All"
       ? projects
-      : projects.filter((project) => project.type === activeFilter);
+      : projects.filter((project) => project.category === activeFilter);
 
   return (
     <section
@@ -45,12 +55,10 @@ function Projects() {
           <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-gray-400">
             03 — PROJECTS
           </p>
-
           <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
             Selected work.
           </h2>
         </div>
-
         <p className="text-gray-500">
           Projects can grow as my skills grow.
         </p>
@@ -77,7 +85,7 @@ function Projects() {
       <div className="grid gap-6 md:grid-cols-3">
         {filteredProjects.map((project, i) => (
           <article
-            key={project.title}
+            key={project.id}
             onClick={() => setSelectedProject(project)}
             className="group cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-2 hover:border-white/20 hover:bg-white/[0.06]"
           >
@@ -85,9 +93,8 @@ function Projects() {
               <span className="text-sm font-semibold text-gray-500">
                 {String(i + 1).padStart(2, "0")}
               </span>
-
               <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
-                {project.type}
+                {project.category}
               </span>
             </div>
 
@@ -100,10 +107,10 @@ function Projects() {
             </p>
 
             <div className="flex flex-wrap gap-2">
-              {project.tech.map((tech) => (
+              {project.technologies.map((tech) => (
                 <span
-                  className="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-gray-400"
                   key={tech}
+                  className="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-gray-400"
                 >
                   {tech}
                 </span>
@@ -130,9 +137,8 @@ function Projects() {
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
-                  {selectedProject.type}
+                  {selectedProject.category}
                 </p>
-
                 <h3 className="text-2xl font-bold text-white">
                   {selectedProject.title}
                 </h3>
@@ -155,9 +161,8 @@ function Projects() {
               <p className="mb-3 text-sm font-semibold text-white">
                 Technologies
               </p>
-
               <div className="flex flex-wrap gap-2">
-                {selectedProject.tech.map((tech) => (
+                {selectedProject.technologies.map((tech) => (
                   <span
                     key={tech}
                     className="rounded-full border border-white/10 px-3 py-1 text-sm text-gray-400"
